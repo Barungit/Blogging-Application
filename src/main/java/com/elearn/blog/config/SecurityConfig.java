@@ -2,8 +2,9 @@ package com.elearn.blog.config;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-
+import org.apache.catalina.filters.CorsFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,11 +20,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.elearn.blog.security.CustomUserDetailService;
 import com.elearn.blog.security.JwtAuthenticationEntryPoint;
 import com.elearn.blog.security.JwtAuthenticationFilter;
+
+import jakarta.servlet.http.HttpServletRequest;
+
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @Configuration
 @EnableWebMvc
@@ -87,6 +95,12 @@ public class SecurityConfig {
 	@Bean
 	public AuthenticationManager authenticationManagerBean(AuthenticationConfiguration configuration) throws Exception {
 		return configuration.getAuthenticationManager();
+	}
+	
+	@Bean
+	public FilterRegistrationBean corsFilter() {
+		FilterRegistrationBean bean = new FilterRegistrationBean(new CORSFilter());
+		return bean;
 	}
 }
 
