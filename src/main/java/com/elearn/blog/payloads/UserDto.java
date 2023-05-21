@@ -23,6 +23,7 @@ public class UserDto {
 	@NotEmpty
 	@Size(min = 4, message = "Username must be of aleast 4 characters.")
 	private String name;
+	@NotEmpty
 	@jakarta.validation.constraints.Email(message = "Email address is not valid!")
 	private String Email;
 	@NotEmpty

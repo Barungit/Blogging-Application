@@ -34,14 +34,14 @@ import lombok.Setter;
 @Setter
 public class User implements UserDetails {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int uid;
 	
 	@Column(name = "name", nullable = false, length = 100)
 	private String name;
 	
 	
-	
+	@Column(unique = true)
 	private String email;
 	
 	private String about;
