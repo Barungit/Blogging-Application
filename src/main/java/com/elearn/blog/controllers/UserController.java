@@ -23,7 +23,7 @@ import com.elearn.blog.services.UserService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/apis/users")
+@RequestMapping("/apis/v1/users")
 public class UserController {
 	
 	@Autowired
