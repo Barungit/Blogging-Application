@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StreamUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,7 +33,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/")
+@RequestMapping("/api/v1")
 public class BlogController {
 	
 	@Autowired
@@ -44,25 +45,34 @@ public class BlogController {
 	private String path;
 	
 	//create
-	@PostMapping("/user/{userId}/category/{categoryId}/blogs")
+	/*@PostMapping("/user/{userId}/category/{categoryId}/blogs")
 	public ResponseEntity<BlogDto> createBlog(
 			@Valid
 			@ModelAttribute BlogDto blogDto,
+			BindingResult bindingResult,
 			@PathVariable Integer userId,
 			@PathVariable Integer categoryId,
 			 @RequestParam("image") MultipartFile image) throws IOException{
 			
 			BlogDto createdBlog = this.blogService.createBlog(blogDto, userId, categoryId);
+			if (bindingResult.hasErrors()) {
+		        // handle validation errors
+				System.out.println("YO YO YO");
+				System.out.println(blogDto.getTitle());
+				System.out.println(blogDto.getContent());
+				System.out.println(blogDto.getUser());
+				System.out.println(blogDto.getCategory());
+		    }
 			
-			 
 			 String filename = this.fileService.uploadImage(path, image);
 			 createdBlog.setPicname(filename);
 			 BlogDto updatedblog = this.blogService.updateBlog(createdBlog, createdBlog.getBid());
 			
 			 
 			return new ResponseEntity<BlogDto>(updatedblog, HttpStatus.CREATED);
-	}
-	/*public ResponseEntity<BlogDto> createBlog(
+	}*/
+	@PostMapping("/user/{userId}/category/{categoryId}/blogs")
+	public ResponseEntity<BlogDto> createBlog(
 			@Valid
 			@RequestBody BlogDto blogDto,
 			@PathVariable Integer userId,
@@ -70,7 +80,7 @@ public class BlogController {
 			
 			BlogDto createdBlog = this.blogService.createBlog(blogDto, userId, categoryId);
 			return new ResponseEntity<BlogDto>(createdBlog, HttpStatus.CREATED);
-	}*/
+	}
 	
 	//get blog by bid
 	@GetMapping("/blogs/{bid}")
