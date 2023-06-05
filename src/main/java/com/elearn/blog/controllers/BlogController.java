@@ -49,20 +49,11 @@ public class BlogController {
 	public ResponseEntity<BlogDto> createBlog(
 			@Valid
 			@ModelAttribute BlogDto blogDto,
-			BindingResult bindingResult,
 			@PathVariable Integer userId,
 			@PathVariable Integer categoryId,
 			 @RequestParam("image") MultipartFile image) throws IOException{
 			
 			BlogDto createdBlog = this.blogService.createBlog(blogDto, userId, categoryId);
-			if (bindingResult.hasErrors()) {
-		        // handle validation errors
-				System.out.println("YO YO YO");
-				System.out.println(blogDto.getTitle());
-				System.out.println(blogDto.getContent());
-				System.out.println(blogDto.getUser());
-				System.out.println(blogDto.getCategory());
-		    }
 			
 			 String filename = this.fileService.uploadImage(path, image);
 			 createdBlog.setPicname(filename);

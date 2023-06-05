@@ -43,7 +43,7 @@ public class BlogServiceImpl implements BlogService {
 		
 		Blog blog = this.modelMapper.map(blogDto, Blog.class);
 		//String filename = this.fileService.uploadImage(path, image);
-		// createdBlog.setPicname(filename);
+		 //createdBlog.setPicname(filename);
 		/*System.out.println(blog.getTitle());
 		System.out.println(blog.getContent());
 		System.out.println(blog.getUser());
