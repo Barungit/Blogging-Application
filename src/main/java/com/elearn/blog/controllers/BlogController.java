@@ -136,6 +136,7 @@ public class BlogController {
 		 //update blog by id
 		 @PutMapping("/blogs/{bid}")
 		 public ResponseEntity<BlogDto> updateBlog(@RequestBody BlogDto blogDto, @PathVariable Integer bid){
+			 
 			 BlogDto updatedBlog = this.blogService.updateBlog(blogDto, bid);
 			 return new ResponseEntity<BlogDto>(updatedBlog, HttpStatus.OK);
 		 }
