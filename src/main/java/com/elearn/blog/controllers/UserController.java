@@ -23,7 +23,7 @@ import com.elearn.blog.services.UserService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/apis/v1/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 	
 	@Autowired
@@ -38,8 +38,9 @@ public class UserController {
 	
 	//Update single user
 	@PutMapping("/{uid}")
-	public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable Integer uid){
-		
+	public ResponseEntity<UserDto> updateUser( @RequestBody UserDto userDto, @PathVariable Integer uid){
+		System.out.println("Hellllo");
+		System.out.println(userDto.getPhone());
 		UserDto updatedUser =  this.userService.updateUser(userDto, uid);
 		return ResponseEntity.ok(updatedUser);
 	}
