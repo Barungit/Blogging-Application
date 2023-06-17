@@ -73,7 +73,9 @@ public class UserServiceImpl implements UserService {
 	public void deleteUser(Integer uid) {
 		// TODO Auto-generated method stub
 		User user = this.userRepo.findById(uid).orElseThrow(()-> new ResourceNotFoundException("User","id",uid));
-		this.userRepo.delete(user);
+		//this.userRepo.delete(user);
+		user.getRoles().clear(); // Remove all associated roles
+		userRepo.delete(user); // Delete the user
 	}
 	
 	private User dtotoUser(UserDto userdto) {
