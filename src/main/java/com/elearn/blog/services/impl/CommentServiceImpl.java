@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.elearn.blog.entities.Blog;
 import com.elearn.blog.entities.Comment;
+import com.elearn.blog.entities.User;
 import com.elearn.blog.exceptions.ResourceNotFoundException;
 import com.elearn.blog.payloads.CommentDto;
 import com.elearn.blog.repositories.BlogRepo;
@@ -27,16 +28,20 @@ public class CommentServiceImpl implements CommentService {
 	private ModelMapper modelMapper;
 	
 	@Override
-	public CommentDto createComment(CommentDto commentDto,Integer bid) {
+	public CommentDto createComment(CommentDto commentDto,Integer bid, Integer uid) {
 		Blog blog = this.blogRepo.findById(bid).orElseThrow(()-> new ResourceNotFoundException("Blog", "Blog Id", bid));
 		Comment comment = this.modelMapper.map(commentDto, Comment.class);
+		User user = this.userRepo.findById(uid).orElseThrow(() -> new ResourceNotFoundException("User", "User Id", uid));
 		comment.setBlog(blog);
 		comment.setCommentDate(new Date());
 		
-		comment.setUser(blog.getUser());
+		comment.setUser(user);
 		Comment savedComment = this.commentRepo.save(comment);
 		
-		return this.modelMapper.map(savedComment, CommentDto.class);
+		CommentDto reply =this.modelMapper.map(savedComment, CommentDto.class);
+		reply.setUserId(uid);
+		reply.setCommentAuthor(user.getName());
+		return reply;
 	}
 
 	@Override

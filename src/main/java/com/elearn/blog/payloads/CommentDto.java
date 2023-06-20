@@ -22,6 +22,10 @@ public class CommentDto {
 	
 	private Date commentDate;
 	
+	private int userId;
+	
+	private String commentAuthor;
+	
 	//private Blog blog;
 	
 	//private User user;

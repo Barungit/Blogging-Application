@@ -2,6 +2,7 @@ package com.elearn.blog.services.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -18,6 +19,8 @@ import com.elearn.blog.entities.User;
 import com.elearn.blog.exceptions.ResourceNotFoundException;
 import com.elearn.blog.payloads.BlogDto;
 import com.elearn.blog.payloads.BlogResponse;
+import com.elearn.blog.payloads.CommentDto;
+import com.elearn.blog.payloads.UserDto;
 import com.elearn.blog.repositories.BlogRepo;
 import com.elearn.blog.repositories.CategoryRepo;
 import com.elearn.blog.repositories.UserRepo;
@@ -164,7 +167,23 @@ public class BlogServiceImpl implements BlogService {
 	public BlogDto getBlogbyId(Integer Bid) {
 		Blog blog = this.blogRepo.findById(Bid).orElseThrow(() ->new ResourceNotFoundException("Blog", "Blog Id", Bid));
 		
-		return this.modelMapper.map(blog, BlogDto.class);
+		BlogDto blogDto =this.modelMapper.map(blog, BlogDto.class);
+		 // Fetch the user information and set it in the UserDto object
+	    User user = userRepo.findById(blog.getUser().getUid())
+	            .orElseThrow(() -> new ResourceNotFoundException("User", "User ID", blog.getUser().getUid()));
+	    UserDto userDto = modelMapper.map(user, UserDto.class);
+	    blogDto.setUser(userDto);
+
+	    // Fetch the comments and set them in the BlogDto object
+	    Set<CommentDto> commentDtos = blog.getComments().stream()
+	            .map(comment -> {
+	            	CommentDto commentDto = modelMapper.map(comment, CommentDto.class);
+	            	commentDto.setUserId(comment.getUser().getUid());
+	            	commentDto.setCommentAuthor(comment.getUser().getName());
+	            	return commentDto;})
+	            .collect(Collectors.toSet());
+	    blogDto.setComments(commentDtos);
+		return blogDto;
 	}
 
 }

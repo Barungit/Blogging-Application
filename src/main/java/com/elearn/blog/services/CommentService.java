@@ -4,7 +4,7 @@ import com.elearn.blog.payloads.CommentDto;
 
 public interface CommentService {
 	
-	CommentDto createComment(CommentDto commentDto,Integer bid);
+	CommentDto createComment(CommentDto commentDto,Integer bid, Integer uid);
 	
 	void deleteComment(Integer commentId);
 	
