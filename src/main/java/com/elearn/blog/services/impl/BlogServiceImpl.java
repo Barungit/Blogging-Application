@@ -89,7 +89,10 @@ public class BlogServiceImpl implements BlogService {
 		Pageable p = PageRequest.of(pageNumber, pageSize,Sort.by(Sort.Direction.fromString(sortDir), sortBy));
 		Page<Blog> bloginonepage = this.blogRepo.findAll(p);
 		List<Blog> allblog = bloginonepage.getContent();
-		List<BlogDto> blogDtos = allblog.stream().map((ab)-> this.modelMapper.map(ab, BlogDto.class)).collect(Collectors.toList());
+		/*List<BlogDto> blogDtos = allblog.stream().map((ab)-> this.modelMapper.map(ab, BlogDto.class)).collect(Collectors.toList());*/
+		
+		List<BlogDto> blogDtos = getBlogDtos(allblog);
+
 		
 		BlogResponse blogResponse = new BlogResponse();
 		blogResponse.setContent(blogDtos);
@@ -111,7 +114,7 @@ public class BlogServiceImpl implements BlogService {
 		if(blogs.getSize() == 0) {
 			throw new ResourceNotFoundException("Any Blog","Category Id",categoryId);
 		}
-		List<BlogDto> blogDtos = allblog.stream().map((blog) -> this.modelMapper.map(blog, BlogDto.class)).collect(Collectors.toList());
+		List<BlogDto> blogDtos = getBlogDtos(allblog);
 		BlogResponse blogResponse = new BlogResponse();
 		blogResponse.setContent(blogDtos);
 		blogResponse.setPageNumber(blogs.getNumber());
@@ -132,9 +135,9 @@ public class BlogServiceImpl implements BlogService {
 			throw new ResourceNotFoundException("No Blog","User Id",uid);
 		}
 		List<Blog> allblog = blogs.getContent();
-		List<BlogDto> blogDto = allblog.stream().map((blog) -> this.modelMapper.map(blog, BlogDto.class)).collect(Collectors.toList());
+		List<BlogDto> blogDtos = getBlogDtos(allblog);
 		BlogResponse blogResponse = new BlogResponse();
-		blogResponse.setContent(blogDto);
+		blogResponse.setContent(blogDtos);
 		blogResponse.setPageNumber(blogs.getNumber());
 		blogResponse.setPageSize(blogs.getSize());
 		blogResponse.setTotalElements(blogs.getTotalElements());
@@ -152,9 +155,9 @@ public class BlogServiceImpl implements BlogService {
 			throw new ResourceNotFoundException("Blogs","keywords",keyword);
 		}
 		List<Blog> allblog = results.getContent();
-		List<BlogDto> blogDto = allblog.stream().map((blog) -> this.modelMapper.map(blog, BlogDto.class)).collect(Collectors.toList());
+		List<BlogDto> blogDtos = getBlogDtos(allblog);
 		BlogResponse blogResponse = new BlogResponse();
-		blogResponse.setContent(blogDto);
+		blogResponse.setContent(blogDtos);
 		blogResponse.setPageNumber(results.getNumber());
 		blogResponse.setPageSize(results.getSize());
 		blogResponse.setTotalElements(results.getTotalElements());
@@ -163,6 +166,33 @@ public class BlogServiceImpl implements BlogService {
 		
 		return blogResponse;
 	}
+	
+	public List<BlogDto> getBlogDtos(List<Blog> allblog){
+		return allblog.stream()
+	            .map(blog -> {
+	                // Map the blog to the DTO
+	                BlogDto blogDto = this.modelMapper.map(blog, BlogDto.class);
+
+	                // Fetch the user information and set it in the UserDto object
+	                UserDto userDto = this.modelMapper.map(blog.getUser(), UserDto.class);
+	                blogDto.setUser(userDto);
+
+	                // Fetch the comments and set them in the BlogDto object
+	                Set<CommentDto> commentDtos = blog.getComments().stream()
+	                        .map(comment -> {
+	                            CommentDto commentDto = modelMapper.map(comment, CommentDto.class);
+	                            commentDto.setUserId(comment.getUser().getUid());
+	                            commentDto.setCommentAuthor(comment.getUser().getName());
+	                            return commentDto;
+	                        })
+	                        .collect(Collectors.toSet());
+	                blogDto.setComments(commentDtos);
+
+	                return blogDto;
+	            })
+	            .collect(Collectors.toList());
+	}
+	
 	@Override
 	public BlogDto getBlogbyId(Integer Bid) {
 		Blog blog = this.blogRepo.findById(Bid).orElseThrow(() ->new ResourceNotFoundException("Blog", "Blog Id", Bid));
