@@ -37,8 +37,8 @@ public class CommentController {
 	
 	//update comment
 	@PutMapping("/comments/{cid}")
-	public ResponseEntity<ApiResponse> updateComment(@RequestBody CommentDto commentDto, @PathVariable Integer cid ){
+	public ResponseEntity<CommentDto> updateComment(@RequestBody CommentDto commentDto, @PathVariable Integer cid ){
 		CommentDto comment = this.commservice.updateComment(commentDto, cid);
-		return new ResponseEntity<ApiResponse>(new ApiResponse("Comment is updated Successfully!!", true),HttpStatus.OK);
+		return new ResponseEntity<CommentDto>(comment,HttpStatus.OK);
 	}
 }
