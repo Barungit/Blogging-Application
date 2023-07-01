@@ -30,22 +30,17 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private RoleRepo roleRepo;
 	
-	@Override
-	public UserDto createUser(UserDto userDto) {
-		User user=this.dtotoUser(userDto);
-		
-		User savedUser =this.userRepo.save(user);
-		return this.usertoDto(savedUser);
-	}
+//	@Override
+//	public UserDto createUser(UserDto userDto) {
+//		User user=this.dtotoUser(userDto);
+//		System.out.println("BarunBarunBarunBarunBarun");
+//		User savedUser =this.userRepo.save(user);
+//		return this.usertoDto(savedUser);
+//	}
 
 	public UserDto updateUser(UserDto userDto, Integer uid) {
 		
 		User user = this.userRepo.findById(uid).orElseThrow(()-> new ResourceNotFoundException("User","id",uid));
-		System.out.println(user.getName());
-		System.out.println(user.getAbout());
-		System.out.println(user.getPhone());
-		System.out.println(user.getEmail());
-		System.out.println(user.getPassword());
 		user.setName(userDto.getName());
 		user.setEmail(user.getEmail());
 		user.setAbout(userDto.getAbout());
@@ -55,6 +50,14 @@ public class UserServiceImpl implements UserService {
 		User updatedUser = this.userRepo.save(user);
 		UserDto userDto1 = this.usertoDto(updatedUser);
 		return userDto1;
+	}
+	
+	@Override
+	public void updatePassword(UserDto userDto, Integer uid) {
+		// TODO Auto-generated method stub
+		User user = this.userRepo.findById(uid).orElseThrow(()-> new ResourceNotFoundException("User","id",uid));
+		user.setPassword(this.passwordEncoder.encode(userDto.getNewPassword()));
+		this.userRepo.save(user);
 	}
 
 	public UserDto getUserById(Integer uid) {
@@ -112,5 +115,7 @@ public class UserServiceImpl implements UserService {
 		return this.modelMapper.map(newUser, UserDto.class);
 		
 	}
+
+	
 
 }

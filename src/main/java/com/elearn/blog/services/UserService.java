@@ -8,8 +8,9 @@ public interface UserService {
 	
 	UserDto registerNewUser(UserDto user);
 	
-	UserDto createUser(UserDto user);
+//	UserDto createUser(UserDto user);
 	UserDto updateUser(UserDto user, Integer uid);
+	void updatePassword(UserDto user, Integer uid);
 	UserDto getUserById(Integer userId);
 	List<UserDto> getAllUsers();
 	void deleteUser(Integer uid);
