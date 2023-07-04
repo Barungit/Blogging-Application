@@ -46,7 +46,8 @@ public class UserServiceImpl implements UserService {
 		user.setAbout(userDto.getAbout());
 		user.setPassword(user.getPassword());
 		user.setPhone(userDto.getPhone());
-		
+		if(userDto.getPropic()!=null)
+		user.setPropic(userDto.getPropic());
 		User updatedUser = this.userRepo.save(user);
 		UserDto userDto1 = this.usertoDto(updatedUser);
 		return userDto1;
@@ -107,6 +108,7 @@ public class UserServiceImpl implements UserService {
 	public UserDto registerNewUser(UserDto userDto) {
 		User user  = this.modelMapper.map(userDto, User.class);
 		user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+		user.setPropic("Default.png");
 		Role role = this.roleRepo.findById(AppConstants.NORMAL_USER).get();
 		
 		user.getRoles().add(role);

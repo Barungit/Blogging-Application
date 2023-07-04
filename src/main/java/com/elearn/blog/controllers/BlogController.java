@@ -70,6 +70,7 @@ public class BlogController {
 			@PathVariable Integer categoryId){
 			
 			BlogDto createdBlog = this.blogService.createBlog(blogDto, userId, categoryId);
+			System.out.println("Create blog controller");
 			return new ResponseEntity<BlogDto>(createdBlog, HttpStatus.CREATED);
 	}
 	
@@ -146,7 +147,7 @@ public class BlogController {
 		 public ResponseEntity<BlogDto> uploadBlogImage(
 				 @PathVariable Integer bid,
 				 @RequestParam("image") MultipartFile image) throws IOException{
-			 
+			 System.out.println("Create blog upload pic");
 			 BlogDto blogDto = this.blogService.getBlogbyId(bid);
 			 String filename = this.fileService.uploadImage(path, image);
 			 blogDto.setPicname(filename);
@@ -158,7 +159,8 @@ public class BlogController {
 		 public void downloadImage(
 				 @PathVariable("picName") String picName,
 				 HttpServletResponse response) throws IOException{
-			 
+			 System.out.println("Create blog serve image");
+			 System.out.println(picName);
 			 InputStream resource = this.fileService.getResource(path, picName);
 			 response.setContentType(MediaType.IMAGE_JPEG_VALUE);
 			 StreamUtils.copy(resource, response.getOutputStream());

@@ -39,7 +39,7 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity
 public class SecurityConfig {
 	
-	public static final String[] PUBLIC_URLS = { "/api/v1/auth/login/" , "/api/blogs/search/**","/api/v1/auth/register/", "/apis/users/" };
+	public static final String[] PUBLIC_URLS = { "/api/v1/auth/login/" , "/api/blogs/search/**","/api/v1/auth/register/", "/apis/users/", "/api/v1/users/pfp/**"};
 	
 	@Autowired
 	private CustomUserDetailService customUserDetailService;

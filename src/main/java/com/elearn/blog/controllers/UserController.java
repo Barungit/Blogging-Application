@@ -1,15 +1,20 @@
 package com.elearn.blog.controllers;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,13 +22,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.elearn.blog.exceptions.ApiException;
 import com.elearn.blog.payloads.ApiResponse;
+import com.elearn.blog.payloads.BlogDto;
 import com.elearn.blog.payloads.UserDto;
+import com.elearn.blog.services.FileService;
 import com.elearn.blog.services.UserService;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -34,7 +44,13 @@ public class UserController {
 	private UserService userService;
 	
 	@Autowired
+	private FileService fileService;
+	
+	@Autowired
 	private AuthenticationManager authenticationManager;
+	
+	@Value("${project.image}")
+	private String path;
 //	//Create Single User
 //	@PostMapping("/")
 //	public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto){
@@ -92,4 +108,27 @@ public class UserController {
 	public ResponseEntity<UserDto> getSingleUsers(@PathVariable Integer uid){
 		return ResponseEntity.ok(this.userService.getUserById(uid));
 	}
+	
+	//upload propic
+	 @PostMapping("/pfp/upload/{uid}")
+	 public ResponseEntity<UserDto> uploadUserImage(
+			 @PathVariable Integer uid,
+			 @RequestParam("image") MultipartFile image) throws IOException{
+		 System.out.println("Create user upload pic");
+		 UserDto userDto =this.userService.getUserById(uid);
+		 String filename = this.fileService.uploadImage(path, image);
+		 userDto.setPropic(filename);
+		 UserDto updatedUser = this.userService.updateUser(userDto, uid);
+		 return new ResponseEntity<UserDto>(updatedUser,HttpStatus.OK);
+	 }
+	//get propic
+	 @GetMapping(value = "/pfp/{propic}",produces = MediaType.IMAGE_JPEG_VALUE)
+	 public void downloadImage(
+			 @PathVariable("propic") String picName,
+			 HttpServletResponse response) throws IOException{
+		 System.out.println("Create user serve image");
+		 InputStream resource = this.fileService.getResource(path, picName);
+		 response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+		 StreamUtils.copy(resource, response.getOutputStream());
+	 }
 }

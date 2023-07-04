@@ -36,6 +36,8 @@ public class UserDto {
 	@Pattern(regexp = "^([+]\\d{2}[ ])?\\d{10}$", message = "Must be of 10 characters")
 	private String phone;
 	
+	private String propic;
+	
 	private Set<RoleDto> roles = new HashSet<>();
 	
 	private String newPassword;

@@ -51,8 +51,8 @@ public class BlogServiceImpl implements BlogService {
 		System.out.println(blog.getContent());
 		System.out.println(blog.getUser());
 		System.out.println(blog.getCategory());*/
+		System.out.println("Create blog sefvice impl");
 		
-		blog.setPicname("Default.png");
 		blog.setUploadDate(new Date());
 		blog.setUser(user);
 		blog.setCategory(category);

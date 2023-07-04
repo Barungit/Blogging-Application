@@ -48,6 +48,8 @@ public class User implements UserDetails {
 	private String password;
 	private String phone;
 	
+	private String propic;
+	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Blog> blogs = new ArrayList<Blog>();
 	
