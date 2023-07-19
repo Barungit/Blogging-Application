@@ -66,8 +66,13 @@ public class BlogServiceImpl implements BlogService {
 	public BlogDto updateBlog(BlogDto blogDto, Integer Bid) {
 		Blog blog = this.blogRepo.findById(Bid).orElseThrow(()-> new ResourceNotFoundException("Blog", "Blog Id", Bid));
 		Blog newblog = this.modelMapper.map(blogDto, Blog.class);
+		Category category = null;
+		if(blogDto.getCategory().getCategoryId()==null) {
+			 category = this.categoryRepo.findById(blog.getCategory().getCategoryId()).get();
+		}else {
+			 category = this.categoryRepo.findById(blogDto.getCategory().getCategoryId()).get();
+		}
 		
-		Category category = this.categoryRepo.findById(blogDto.getCategory().getCategoryId()).get();
 		blog.setTitle(newblog.getTitle());
 		blog.setContent(newblog.getContent());
 		blog.setPicname(newblog.getPicname());
