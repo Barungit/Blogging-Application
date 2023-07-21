@@ -36,6 +36,7 @@ public class Blog {
 	private String content;
 	private String picname;
 	private Date uploadDate;
+	private Long view;
 	
 	@ManyToOne
 	@JoinColumn(name = "cid")

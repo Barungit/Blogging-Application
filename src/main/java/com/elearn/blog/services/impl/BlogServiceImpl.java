@@ -200,15 +200,21 @@ public class BlogServiceImpl implements BlogService {
 	
 	@Override
 	public BlogDto getBlogbyId(Integer Bid) {
-		Blog blog = this.blogRepo.findById(Bid).orElseThrow(() ->new ResourceNotFoundException("Blog", "Blog Id", Bid));
-		
+		Blog oldblog = this.blogRepo.findById(Bid).orElseThrow(() ->new ResourceNotFoundException("Blog", "Blog Id", Bid));
+		if(oldblog.getView()==null) {
+			oldblog.setView((long) 1);
+		}else {
+			oldblog.setView(oldblog.getView()+1);
+		}
+		Blog blog = this.blogRepo.save(oldblog);
+		System.out.println(blog.getView());
 		BlogDto blogDto =this.modelMapper.map(blog, BlogDto.class);
 		 // Fetch the user information and set it in the UserDto object
 	    User user = userRepo.findById(blog.getUser().getUid())
 	            .orElseThrow(() -> new ResourceNotFoundException("User", "User ID", blog.getUser().getUid()));
 	    UserDto userDto = modelMapper.map(user, UserDto.class);
 	    blogDto.setUser(userDto);
-
+	    System.out.println(blogDto.getView()/2);
 	    // Fetch the comments and set them in the BlogDto object
 	    Set<CommentDto> commentDtos = blog.getComments().stream()
 	            .map(comment -> {

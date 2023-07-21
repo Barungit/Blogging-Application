@@ -23,7 +23,7 @@ public class BlogDto {
 	private String content;
 	private String picname;
 	private Date uploadDate;
-	
+	private Long view;
 	private CategoryDto category;
 	private UserDto user;
 	
