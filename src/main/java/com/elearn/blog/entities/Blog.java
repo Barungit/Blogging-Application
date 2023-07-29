@@ -37,6 +37,8 @@ public class Blog {
 	private String picname;
 	private Date uploadDate;
 	private Long view;
+	@Column(columnDefinition = "bit default b'0'")
+	private Boolean visible;
 	
 	@ManyToOne
 	@JoinColumn(name = "cid")

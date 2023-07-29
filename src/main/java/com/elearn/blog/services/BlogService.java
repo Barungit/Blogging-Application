@@ -8,6 +8,8 @@ public interface BlogService {
 	BlogDto createBlog(BlogDto blogDto, Integer userId, Integer categoryId);
 	//update
 	BlogDto updateBlog(BlogDto blogDto,Integer Bid);
+	//approve
+		BlogDto approveBlog(Integer Bid);
 	//delte
 	void deleteBlog(Integer Bid);
 	//get all

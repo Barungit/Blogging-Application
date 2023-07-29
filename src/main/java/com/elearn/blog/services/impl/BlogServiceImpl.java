@@ -80,6 +80,14 @@ public class BlogServiceImpl implements BlogService {
 		Blog updatedBlog = this.blogRepo.save(blog);
 		return this.modelMapper.map(updatedBlog, BlogDto.class);
 	}
+	
+	@Override
+	public BlogDto approveBlog(Integer Bid) {
+		Blog blog = this.blogRepo.findById(Bid).orElseThrow(()-> new ResourceNotFoundException("Blog", "Blog Id", Bid));
+		blog.setVisible(true);
+		Blog updatedBlog = this.blogRepo.save(blog);
+		return this.modelMapper.map(updatedBlog, BlogDto.class);
+	}
 
 	@Override
 	public void deleteBlog(Integer Bid) {

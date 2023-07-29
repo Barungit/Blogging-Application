@@ -142,6 +142,14 @@ public class BlogController {
 			 return new ResponseEntity<BlogDto>(updatedBlog, HttpStatus.OK);
 		 }
 		 
+		//approve blog by id
+		 @PutMapping("/blogs/app/{bid}")
+		 public ResponseEntity<BlogDto> approveBlog(@PathVariable Integer bid){
+			 
+			 BlogDto updatedBlog = this.blogService.approveBlog(bid);
+			 return new ResponseEntity<BlogDto>(updatedBlog, HttpStatus.OK);
+		 }
+		 
 		 //upload image
 		 @PostMapping("/blogs/image/upload/{bid}")
 		 public ResponseEntity<BlogDto> uploadBlogImage(
