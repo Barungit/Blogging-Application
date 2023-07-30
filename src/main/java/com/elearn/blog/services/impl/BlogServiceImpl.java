@@ -180,6 +180,26 @@ public class BlogServiceImpl implements BlogService {
 		return blogResponse;
 	}
 	
+	@Override
+	public BlogResponse getunappBlogs(Boolean visible,Integer pageNumber, Integer pageSize,String sortBy,String sortDir) {
+		Pageable p = PageRequest.of(pageNumber, pageSize,Sort.by(Sort.Direction.fromString(sortDir), sortBy));
+		Page<Blog> results = this.blogRepo.findByVisible(visible, p);
+//		if(results.getTotalPages() == 0) {
+//			throw new ResourceNotFoundException("Blogs","keywords",keyword);
+//		}
+		List<Blog> allblog = results.getContent();
+		List<BlogDto> blogDtos = getBlogDtos(allblog);
+		BlogResponse blogResponse = new BlogResponse();
+		blogResponse.setContent(blogDtos);
+		blogResponse.setPageNumber(results.getNumber());
+		blogResponse.setPageSize(results.getSize());
+		blogResponse.setTotalElements(results.getTotalElements());
+		blogResponse.setTotalPages(results.getTotalPages());
+		blogResponse.setLastPage(results.isLast());
+		
+		return blogResponse;
+	}
+	
 	public List<BlogDto> getBlogDtos(List<Blog> allblog){
 		return allblog.stream()
 	            .map(blog -> {

@@ -22,4 +22,6 @@ public interface BlogService {
 	BlogResponse getallBlogsByUser(Integer uid,Integer pageNumber, Integer pageSize,String sortBy,String sortDir);
 	//search post
 	BlogResponse searchBlogs(String keyword,Integer pageNumber, Integer pageSize,String sortBy,String sortDir);
+	//get unapproved blogs
+	BlogResponse getunappBlogs(Boolean visible,Integer pageNumber, Integer pageSize,String sortBy,String sortDir);
 }

@@ -81,17 +81,29 @@ public class BlogController {
 		return new ResponseEntity<BlogDto>(blogDto,HttpStatus.OK);
 	}
 	
-	//get all blogs 
-	@GetMapping("/blogs")
+	//get approved blogs 
+	@GetMapping("/blogs/")
 	public ResponseEntity<BlogResponse> getallBlogs(
 			@RequestParam( value = "pageNumber",defaultValue = AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
 			@RequestParam( value = "pageSize",defaultValue =AppConstants.PAGE_SIZE,required = false) Integer pageSize,
 			@RequestParam( value = "sortBy",defaultValue =AppConstants.SORT_BY, required = false) String sortBy,
 			@RequestParam( value = "sortDir",defaultValue =AppConstants.SORT_DIR, required = false) String sortDir
 			){
-		 BlogResponse allblogs = this.blogService.getallBlogs(pageNumber,pageSize,sortBy,sortDir);
+		 BlogResponse allblogs = this.blogService.getallBlogs(pageNumber, pageSize, sortBy, sortDir);
 		return new ResponseEntity<BlogResponse>(allblogs, HttpStatus.OK);
 	}
+	
+	//get unapproved blogs 
+		@GetMapping("/blogs/status/{visible}")
+		public ResponseEntity<BlogResponse> getunappBlogs(@PathVariable("visible") Boolean visible,
+				@RequestParam( value = "pageNumber",defaultValue = AppConstants.PAGE_NUMBER,required = false) Integer pageNumber,
+				@RequestParam( value = "pageSize",defaultValue =AppConstants.PAGE_SIZE,required = false) Integer pageSize,
+				@RequestParam( value = "sortBy",defaultValue =AppConstants.SORT_BY, required = false) String sortBy,
+				@RequestParam( value = "sortDir",defaultValue =AppConstants.SORT_DIR, required = false) String sortDir
+				){
+			 BlogResponse allblogs = this.blogService.getunappBlogs(visible, pageNumber, pageSize, sortBy, sortDir);
+			return new ResponseEntity<BlogResponse>(allblogs, HttpStatus.OK);
+		}
 	
 	
 	//get blogs by user

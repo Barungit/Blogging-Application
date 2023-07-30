@@ -26,6 +26,7 @@ public class BlogDto {
 	private Long view;
 	private CategoryDto category;
 	private UserDto user;
+	private Boolean visible;
 	
 	private Set<CommentDto> comments = new HashSet<>();
 }
