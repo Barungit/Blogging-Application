@@ -56,6 +56,7 @@ public class BlogServiceImpl implements BlogService {
 		blog.setUploadDate(new Date());
 		blog.setUser(user);
 		blog.setCategory(category);
+		blog.setVisible(false);
 		
 		Blog newBlog = this.blogRepo.save(blog);
 		
@@ -122,7 +123,7 @@ public class BlogServiceImpl implements BlogService {
 			Integer pageNumber, Integer pageSize,String sortBy,String sortDir) {
 		Pageable p = PageRequest.of(pageNumber, pageSize,Sort.by(Sort.Direction.fromString(sortDir), sortBy));
 		Category cat = this.categoryRepo.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("Category ", "Category Id", categoryId));
-		Page<Blog> blogs = this.blogRepo.findByCategory(cat,p);
+		Page<Blog> blogs = this.blogRepo.findByCategoryAndVisibleTrue(cat, p);
 		List<Blog> allblog = blogs.getContent();
 		if(blogs.getSize() == 0) {
 			throw new ResourceNotFoundException("Any Blog","Category Id",categoryId);
@@ -163,7 +164,7 @@ public class BlogServiceImpl implements BlogService {
 	@Override
 	public BlogResponse searchBlogs(String keyword,Integer pageNumber, Integer pageSize,String sortBy,String sortDir) {
 		Pageable p = PageRequest.of(pageNumber, pageSize,Sort.by(Sort.Direction.fromString(sortDir), sortBy));
-		Page<Blog> results = this.blogRepo.findByTitleContaining(keyword, p);
+		Page<Blog> results = this.blogRepo.findByTitleContainingAndVisibleTrue(keyword, p);
 		if(results.getTotalPages() == 0) {
 			throw new ResourceNotFoundException("Blogs","keywords",keyword);
 		}

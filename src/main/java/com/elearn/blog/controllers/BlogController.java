@@ -70,7 +70,6 @@ public class BlogController {
 			@PathVariable Integer categoryId){
 			
 			BlogDto createdBlog = this.blogService.createBlog(blogDto, userId, categoryId);
-			System.out.println("Create blog controller");
 			return new ResponseEntity<BlogDto>(createdBlog, HttpStatus.CREATED);
 	}
 	
