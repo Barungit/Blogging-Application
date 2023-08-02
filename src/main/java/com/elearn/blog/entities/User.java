@@ -44,6 +44,9 @@ public class User implements UserDetails {
 	@Column(unique = true)
 	private String email;
 	
+	@Column
+    private String resetToken;
+	
 	private String about;
 	private String password;
 	private String phone;

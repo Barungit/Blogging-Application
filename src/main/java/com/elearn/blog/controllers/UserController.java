@@ -3,6 +3,8 @@ package com.elearn.blog.controllers;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,11 +71,12 @@ public class UserController {
 	//update password
 	@PutMapping("/password/{uid}")
 	public ResponseEntity<ApiResponse> passwordChange(@RequestBody UserDto userDto, @PathVariable Integer uid){
-		System.out.println("Barun ji");
-		System.out.println(userDto.getEmail());
-		System.out.println(userDto.getPassword());
-		System.out.println(userDto.getNewPassword());
-		System.out.println("Barun ji");
+		String regex = "^(?:(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*)[^\\s]{8,20}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(userDto.getNewPassword());
+        if(!matcher.matches()) {
+        	throw new ApiException("Invalid password !!");
+        }
 		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDto.getEmail(),userDto.getPassword());
 		try {
 			this.authenticationManager.authenticate(authenticationToken);
@@ -88,6 +91,20 @@ public class UserController {
 		
 		return new ResponseEntity<ApiResponse>(new ApiResponse("Password Changed successfully", true), HttpStatus.OK);
 	}
+	
+	//forgot password
+		@PutMapping("/forgotPassword/{token}/{pass}")
+		public ResponseEntity<ApiResponse> forgotPassword(@PathVariable("token") String token , @PathVariable("pass") String pass){
+			String regex = "^(?:(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*)[^\\s]{8,20}$";
+	        Pattern pattern = Pattern.compile(regex);
+	        Matcher matcher = pattern.matcher(pass);
+	        if(!matcher.matches()) {
+	        	throw new ApiException("Invalid password !!");
+	        }
+			this.userService.forgotPassword(token,pass);		
+			
+			return new ResponseEntity<ApiResponse>(new ApiResponse("Password Changed successfully", true), HttpStatus.OK);
+		}
 	
 	//Delete single user
 //	@PreAuthorize("hasRole('ADMIN')")

@@ -9,4 +9,9 @@ import com.elearn.blog.entities.User;
 public interface UserRepo extends JpaRepository<User, Integer> {
 	
 	Optional<User> email(String email);
+	
+	User findByEmail(String email);
+	User findByresetToken(String token);
+	
+	
 }

@@ -6,12 +6,14 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.elearn.blog.config.AppConstants;
 import com.elearn.blog.entities.Role;
 import com.elearn.blog.entities.User;
+import com.elearn.blog.payloads.ApiResponse;
 import com.elearn.blog.payloads.UserDto;
 import com.elearn.blog.repositories.RoleRepo;
 import com.elearn.blog.repositories.UserRepo;
@@ -59,6 +61,24 @@ public class UserServiceImpl implements UserService {
 		User user = this.userRepo.findById(uid).orElseThrow(()-> new ResourceNotFoundException("User","id",uid));
 		user.setPassword(this.passwordEncoder.encode(userDto.getNewPassword()));
 		this.userRepo.save(user);
+	}
+	
+	@Override
+	public void forgotPassword(String token, String pass) {
+		// TODO Auto-generated method stub
+		
+		User user = this.userRepo.findByresetToken(token);
+		if(user==null) {
+			new ResourceNotFoundException("User","token:",token);
+		}
+			
+			user.setPassword(this.passwordEncoder.encode(pass));
+			user.setResetToken(null);
+			
+			
+			this.userRepo.save(user);
+		
+		
 	}
 
 	public UserDto getUserById(Integer uid) {

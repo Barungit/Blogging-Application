@@ -39,6 +39,6 @@ public class UserDto {
 	private String propic;
 	
 	private Set<RoleDto> roles = new HashSet<>();
-	
 	private String newPassword;
+	private String resetToken;
 }
